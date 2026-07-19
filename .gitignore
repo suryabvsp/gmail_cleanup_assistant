@@ -11,12 +11,17 @@ credentials.json
 token.json
 
 # Generated data
-data/
+data/gmail.db
+data/*.db
+data/*.db-wal
+data/*.db-shm
 reports/
 exports/
 
 # SQLite
 *.db
+*.db-wal
+*.db-shm
 *.sqlite
 *.sqlite3
 

@@ -10,6 +10,11 @@ def get_connection():
 
     conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
+
+    # Performance improvements
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+
     return conn
 
 
@@ -34,9 +39,19 @@ def initialize_database():
     conn.commit()
     conn.close()
 
-def insert_email(email):
-    conn = get_connection()
 
+def load_existing_ids(conn):
+    rows = conn.execute(
+        """
+        SELECT message_id
+        FROM emails
+        """
+    ).fetchall()
+
+    return {row["message_id"] for row in rows}
+
+
+def insert_email(conn, email):
     conn.execute("""
     INSERT OR REPLACE INTO emails (
         message_id,
@@ -64,8 +79,6 @@ def insert_email(email):
         email["category"],
     ))
 
-    conn.commit()
-    conn.close()
 
 def get_email_count():
     conn = get_connection()
@@ -77,19 +90,3 @@ def get_email_count():
     conn.close()
 
     return count
-
-def email_exists(message_id):
-    conn = get_connection()
-
-    row = conn.execute(
-        """
-        SELECT 1
-        FROM emails
-        WHERE message_id = ?
-        """,
-        (message_id,),
-    ).fetchone()
-
-    conn.close()
-
-    return row is not None

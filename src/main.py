@@ -22,8 +22,10 @@ def main():
     print(f"Total Messages: {profile['messagesTotal']:,}")
     print(f"Total Threads : {profile['threadsTotal']:,}")
 
-    scan_mailbox(service)
-    
+    scan_mailbox(
+        service,
+        profile["messagesTotal"],
+    )
 
 
 if __name__ == "__main__":
