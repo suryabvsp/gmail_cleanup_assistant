@@ -4,8 +4,9 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-# Read-only access to Gmail
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+SCOPES = [
+    "https://www.googleapis.com/auth/gmail.modify"
+]
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TOKEN_FILE = BASE_DIR / "token.json"

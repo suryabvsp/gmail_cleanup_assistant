@@ -1,4 +1,5 @@
 from auth import authenticate
+from delete_by_sender import preview_sender
 from gmail_client import (
     get_gmail_service,
     get_profile,
@@ -28,6 +29,8 @@ def main():
     # )
 
     top_senders()
+
+    preview_sender(service)
 
 
 if __name__ == "__main__":

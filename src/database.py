@@ -90,3 +90,41 @@ def get_email_count():
     conn.close()
 
     return count
+
+def search_emails(query):
+    conn = get_connection()
+
+    rows = conn.execute(
+        """
+        SELECT
+            message_id,
+            subject,
+            size_estimate
+        FROM emails
+        WHERE sender LIKE ?
+        """,
+        (f"%{query}%",)
+    ).fetchall()
+
+    conn.close()
+
+    return rows
+
+def search_sender(sender_email):
+    conn = get_connection()
+
+    rows = conn.execute(
+        """
+        SELECT
+            message_id,
+            subject,
+            size_estimate
+        FROM emails
+        WHERE LOWER(sender) LIKE ?
+        """,
+        (f"%{sender_email.lower()}%",)
+    ).fetchall()
+
+    conn.close()
+
+    return rows

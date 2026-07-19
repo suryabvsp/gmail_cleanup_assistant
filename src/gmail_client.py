@@ -58,3 +58,43 @@ def iterate_message_ids(service):
 
         if not page_token:
             break
+
+def search_message_ids(service, query):
+    page_token = None
+
+    while True:
+
+        response = (
+            service.users()
+            .messages()
+            .list(
+                userId="me",
+                q=query,
+                pageToken=page_token,
+                maxResults=500,
+            )
+            .execute()
+        )
+
+        for message in response.get("messages", []):
+            yield message["id"]
+
+        page_token = response.get("nextPageToken")
+
+        if not page_token:
+            break
+
+def trash_messages(service, message_ids):
+
+    (
+        service.users()
+        .messages()
+        .batchModify(
+            userId="me",
+            body={
+                "ids": message_ids,
+                "addLabelIds": ["TRASH"]
+            }
+        )
+        .execute()
+    )
