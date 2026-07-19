@@ -7,7 +7,7 @@ from database import initialize_database
 from parser import parse_message
 from database import initialize_database, insert_email, get_email_count
 from scanner import scan_mailbox
-
+from analytics import top_senders
 
 def main():
     initialize_database()
@@ -22,10 +22,12 @@ def main():
     print(f"Total Messages: {profile['messagesTotal']:,}")
     print(f"Total Threads : {profile['threadsTotal']:,}")
 
-    scan_mailbox(
-        service,
-        profile["messagesTotal"],
-    )
+    # scan_mailbox(
+    #     service,
+    #     profile["messagesTotal"],
+    # )
+
+    top_senders()
 
 
 if __name__ == "__main__":
