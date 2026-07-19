@@ -66,3 +66,30 @@ def insert_email(email):
 
     conn.commit()
     conn.close()
+
+def get_email_count():
+    conn = get_connection()
+
+    count = conn.execute(
+        "SELECT COUNT(*) FROM emails"
+    ).fetchone()[0]
+
+    conn.close()
+
+    return count
+
+def email_exists(message_id):
+    conn = get_connection()
+
+    row = conn.execute(
+        """
+        SELECT 1
+        FROM emails
+        WHERE message_id = ?
+        """,
+        (message_id,),
+    ).fetchone()
+
+    conn.close()
+
+    return row is not None

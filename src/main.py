@@ -2,12 +2,12 @@ from auth import authenticate
 from gmail_client import (
     get_gmail_service,
     get_profile,
-    list_messages,
-    get_message_metadata,
 )
 from database import initialize_database
 from parser import parse_message
-from database import initialize_database, insert_email
+from database import initialize_database, insert_email, get_email_count
+from scanner import scan_mailbox
+
 
 def main():
     initialize_database()
@@ -22,27 +22,7 @@ def main():
     print(f"Total Messages: {profile['messagesTotal']:,}")
     print(f"Total Threads : {profile['threadsTotal']:,}")
 
-    messages = list_messages(service)
-
-    print(f"\nRetrieved {len(messages)} message IDs")
-
-    print("\nFirst five message IDs:")
-
-    for message in messages[:5]:
-        print(message["id"])
-
-    first_id = messages[0]["id"]
-
-    metadata = get_message_metadata(service, first_id)
-
-    print("\n===== First Email Metadata =====")
-    parsed = parse_message(metadata)
-    print("\n===== Parsed Email =====")
-    for key, value in parsed.items():
-        print(f"{key:16}: {value}")
-
-    insert_email(parsed)
-    print("\nEmail successfully written to SQLite.")
+    scan_mailbox(service)
     
 
 
